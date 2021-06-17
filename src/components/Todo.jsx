@@ -106,25 +106,25 @@ function toggleComplete(id) {
 // you must provide a userId and the userId must be the id of an actual registered user
 // in this example, we use the id of the user we registered above.
 // register or log in a user to get the users' id
-    function getTodo(userId) {
+//     function getTodo(userId) {
      
-      let updatedTodos = {
-         userId: userId, //required
-         completed: true, // change the status to completed
-         description: 'A new description. the last one was too long', // change the description as well
-       }
+//       let updatedTodos = {
+//          userId: userId, //required
+//          completed: true, // change the status to completed
+//          description: 'A new description. the last one was too long', // change the description as well
+//        }
            
-             fetch(`https://user-manager-three.vercel.app/api/todo?userId=${params.userid}`)
-             .then(res => res.json())
-             .then(result => {
-             console.log(result)
-             })
-             .catch(err => {
-            console.log('this error occurred', err)
-             })
+//              fetch(`https://user-manager-three.vercel.app/api/todo?userId=${params.userid}`)
+//              .then(res => res.json())
+//              .then(result => {
+//              console.log(result)
+//              })
+//              .catch(err => {
+//             console.log('this error occurred', err)
+//              })
  
-       setTodos(updatedTodos);
-     }
+//        setTodos(updatedTodos);
+//      }
    
   
   
