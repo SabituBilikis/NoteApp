@@ -1,13 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
-import {  useHistory } from 'react-router-dom';
-
 import { AppContext } from '../components/StateProvider';
-
 const Home = () => {
 	
-    const { state, setState } = useContext(AppContext);
-	const history = useHistory();
+    const { state } = useContext(AppContext);
+
 
 	return (!state.isLoggedIn ? (
         <div className='home'>
