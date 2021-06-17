@@ -4,39 +4,59 @@ import { useHistory } from 'react-router-dom';
 import { AppContext } from '../components/StateProvider';
 
 export default function Login() {
-	const { setState } = useContext(AppContext);
+
+	const context = useContext(AppContext);
+	console.log(context);
+
 	const { register, handleSubmit } = useForm();
 	const history = useHistory();
 
 	const login = ({ email, password }) => {
-		// get the users data
-		const user = localStorage.getItem(email);
+		// create data to be sent to the api for validation
+		let userdata = {
+			email: email,
+			password: password,
+		};
 
-		if (!user) {
-			return alert('An account for this email was not found');
-		}
+		fetch(
+			'https://user-manager-three.vercel.app/api/user/login',
+			{
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+				},
+				body: JSON.stringify(userdata),
+			}
+		)
+			.then(res => res.json())
+			.then(result => {
+				if (result.error === true) {
+					return alert(result.message);
+				}
 
-		const userdata = JSON.parse(user);
-		console.log(userdata);
+				context.dispatch({
+					type: 'LOGIN',
+					payload: result.body,
+				});
 
-		if (password !== userdata.password) {
-			return alert('email or password was incorrect');
-		}
-
-		alert('login successfull');
-		setState(prevstate => {
-			return {
-				...prevstate,
-				isLoggedIn: true,
-				userId: userdata.userId,
-				userEmail: userdata.email,
-			};
-		});
-		history.push('/home');
+				history.push('/home');
+			})
+			.catch(err => {
+				alert(
+					'Unable to complete request. Please try again after some time'
+				);
+				console.log({ err });
+			});
 	};
 
 	return (
 		<>
+			<div>
+				<h2>Login</h2>
+				<span>Login to view your shopping list</span>
+			</div>
+			<br />
+			
 			<form onSubmit={handleSubmit(login)}>
 				<div>
 					<input
@@ -46,6 +66,7 @@ export default function Login() {
 						{...register('email')}
 					/>
 				</div>
+				<br/>
 				<div>
 					<input
 						type='password'
@@ -54,7 +75,10 @@ export default function Login() {
 						{...register('password')}
 					/>
 				</div>
-				<input type='submit' value='Login' />
+				<br/>
+				<div>
+					<button type='submit' value='Login'>Login</button>
+				</div>
 			</form>
 		</>
 	);
