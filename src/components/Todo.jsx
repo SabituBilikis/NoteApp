@@ -182,3 +182,4 @@ function toggleComplete(id) {
       </div>
     );
   };
+  export default Todo;
