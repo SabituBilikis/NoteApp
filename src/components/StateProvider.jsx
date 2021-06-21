@@ -1,74 +1,35 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 export const AppContext = createContext();
 
-// reducer function
-function reducer(state, action) {
-	// create a copy of your state
-	let stateCopy = { ...state };
-
-	// set the name on our state copy to action
-	stateCopy.action = action;
-
-	// if action.type is ADD_ITEM
-	// add the payload to shoppingList
-	if (action.type === 'ADD_ITEM') {
-		stateCopy.todoList.unshift(action.payload);
-	}
-
-	// if action.type is LOGIN
-	// set isUserLoggedIn to true
-	// & set userData to payload
-	if (action.type === 'LOGIN') {
-		stateCopy.isUserLoggedIn = true;
-		stateCopy.userData = action.payload;
-	}
-
-	// if action.type is LOGOUT
-	// set isUserLoggedIn to false
-	// & set userData to null
-	if (action.type === 'LOGOUT') {
-		stateCopy.isUserLoggedIn = false;
-		stateCopy.userData = null;
-	}
-
-	return stateCopy;
-}
-
 const initialState = {
-	shoppingList: [
-		{
-			id: 1,
-			title: 'Item 1',
-			description:
-				'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime, totam!',
-		},
-		{
-			id: 2,
-			title: 'Item 2',
-			description:
-				'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime, totam!',
-		},
-	],
-	isUserLoggedIn: false,
-	userData: null,
+	isLoggedIn: false,
+	userId: null,
+	userEmail: null,
+	posts: [],
 };
 
-function StateProvider({ children }) {
-	// const [state, setState] = useState('');
+export default function StateProvider({ children }) {
+	const [appData, setAppData] = useState(initialState);
 
-	const [appstate, dispatch] = useReducer(reducer, initialState);
-
-	const contextObject = {
-		state: appstate,
-		dispatch: dispatch,
-	};
+	useEffect(() => {
+		fetch('https://jsonplaceholder.typicode.com/posts')
+			.then(res => res.json())
+			.then(result => {
+				console.log(result);
+				setAppData(prevValue => {
+					return {
+						...prevValue,
+						posts: result,
+					};
+				});
+			});
+	}, []);
 
 	return (
-		<AppContext.Provider value={contextObject}>
+		<AppContext.Provider value={{ state: appData, setState: setAppData }}>
 			{children}
 		</AppContext.Provider>
 	);
 }
 
-export default StateProvider;
