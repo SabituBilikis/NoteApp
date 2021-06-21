@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { AppContext } from './StateProvider';
-import { Link, useHistory } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 // import styles
 import styles from '../styles/Navbar.module.css';
