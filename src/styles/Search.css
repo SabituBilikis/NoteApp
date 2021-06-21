@@ -1,0 +1,19 @@
+.search {
+    display: flex;
+    align-items: center;
+    background-color: grey;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 1.5rem;
+}
+
+
+.search input {
+    border: none;
+    background-color: whitesmoke;
+}
+
+.search input:focus{
+    outline: none;
+    
+}
