@@ -2,85 +2,79 @@ import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../components/StateProvider';
+//styles
+import '../styles/RegLog.css';
 
-export default function Login() {
-
-	const context = useContext(AppContext);
-	console.log(context);
-
+ function Login() {
+	const { setState } = useContext(AppContext);
 	const { register, handleSubmit } = useForm();
 	const history = useHistory();
 
 	const login = ({ email, password }) => {
-		// create data to be sent to the api for validation
-		let userdata = {
-			email: email,
-			password: password,
-		};
+		// get the users data
+		const user = localStorage.getItem(email);
 
-		fetch(
-			'https://user-manager-three.vercel.app/api/user/login',
-			{
-				method: 'POST',
-				headers: {
-					'content-type': 'application/json',
-				},
-				body: JSON.stringify(userdata),
-			}
-		)
-			.then(res => res.json())
-			.then(result => {
-				if (result.error === true) {
-					return alert(result.message);
-				}
+		if (!user) {
+			return alert('An account for this email was not found');
+		}
 
-				context.dispatch({
-					type: 'LOGIN',
-					payload: result.body,
-				});
+		const userdata = JSON.parse(user);
+		console.log(userdata);
 
-				history.push('/home');
-			})
-			.catch(err => {
-				alert(
-					'Unable to complete request. Please try again after some time'
-				);
-				console.log({ err });
-			});
+		if (password !== userdata.password) {
+			return alert('email or password was incorrect');
+		}
+
+		alert('login successfull');
+		setState(prevstate => {
+			return {
+				...prevstate,
+				isLoggedIn: true,
+				userId: userdata.userId,
+				userEmail: userdata.email,
+			};
+		});
+		history.push('/noteitems');
 	};
 
 	return (
-		<>
+		<form onSubmit={handleSubmit(login)}>
 			<div>
 				<h2>Login</h2>
-				<span>Login to view your shopping list</span>
+				<span>Login to view your Note</span>
 			</div>
 			<br />
-			
-			<form onSubmit={handleSubmit(login)}>
-				<div>
-					<input
-						type='text'
-						placeholder='email'
-						required
-						{...register('email')}
-					/>
-				</div>
-				<br/>
-				<div>
-					<input
-						type='password'
-						placeholder='password'
-						required
-						{...register('password')}
-					/>
-				</div>
-				<br/>
-				<div>
-					<button type='submit' value='Login'>Login</button>
-				</div>
-			</form>
-		</>
+			<div>
+				<label htmlFor='email'>Email</label>
+				<br />
+				<input
+					type='email'
+					name='email'
+					id='email'
+					required
+					{...register('email')}
+				/>
+			</div>
+			<br />
+			<div>
+				<label htmlFor='password'>Password</label>
+				<br />
+				<input
+					type='password'
+					name='password'
+					id='password'
+					required
+					{...register('password')}
+				/>
+			</div>
+			<br />
+			<div>
+				<button className='btn' type='submit'>
+					Login
+				</button>
+			</div>
+		</form>
 	);
 }
 
+export default Login
