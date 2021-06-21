@@ -1,38 +1,50 @@
 import { useContext } from 'react';
 import { AppContext } from './StateProvider';
-import { Link} from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 // import styles
 import styles from '../styles/Navbar.module.css';
 
-function Navbar() {
-	const context = useContext(AppContext);
+const Navbar = () => {
+	const { state, setState } = useContext(AppContext);
+
 
 	const logout = () => {
-		context.dispatch({
-			type: 'LOGOUT',
+		setState(prev => {
+			return {
+				...prev,
+				isLoggedIn: false,
+				userEmail: null,
+				userId: null,
+			};
 		});
+		
 	};
 
 	return (
 		<nav className={styles.navbar}>
-			{context.state.isUserLoggedIn ? (
+			{!state.isLoggedIn ? (
 				<>
-					<Link className={styles.navlink} to='/home'>Home</Link>
-					
-					<Link className={styles.navlink} to='/todo'>My Todo</Link>
-					
-					<span onClick={logout}>Logout</span>
+					<Link className={styles.navlink} to='/register'>
+						Register
+					</Link>
+					<Link className={styles.navlink} to='/login'>
+						Login
+					</Link>
 				</>
 			) : (
 				<>
-					<Link className={styles.navlink} to='/login'>Login</Link>
-					
-					<Link className={styles.navlink} to='/register'>Register</Link>
-					
+					<Link className={styles.navlink} to='/typenote'>
+					TypeNote
+					</Link>
+					<span onClick={logout} className={styles.navlink}>
+						Logout
+					</span>
 				</>
 			)}
 		</nav>
 	);
-}
+};
+
 export default Navbar;
+
