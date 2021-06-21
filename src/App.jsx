@@ -8,8 +8,6 @@ import Navbar from './components/Navbar';
 import StateProvider from './components/StateProvider';
 
 
-//import styles 
-import './index.css';
 
 const App = () => {
   return (
