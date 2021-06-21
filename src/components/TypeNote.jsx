@@ -27,7 +27,7 @@ const TypeNote = () => {
     
 ]);
 //create search function to make it easy for user to search for note
-const [search, setSearch] = useState('');
+const [setSearch] = useState('');
 
 //create dark mode 
 const [darkMode, setDarkMode] = useState(false);
